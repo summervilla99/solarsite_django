@@ -8,7 +8,7 @@ class LandCategory(models.Model):
     bchk = models.CharField(max_length=255, blank=True, null=True)
     pnu = models.CharField(max_length=255, blank=True, null=True)
     col_adm_se = models.CharField(max_length=255, blank=True, null=True)
-    geom = models.MultiPolygonField(srid=4326)
+    geometry = models.MultiPolygonField(srid=4326)
     region = models.TextField(blank=True, null=True)
     
     class Meta:
