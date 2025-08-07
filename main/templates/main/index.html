@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>SK E&S 태양광 입지 분석</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main/style.css' %}" />
+</head>
+<body>
+  <div class="sidebar">
+    <div class="nav-top">
+      <div class="nav-item" onclick="toggleSearchBox()">
+        <span class="material-icons">search</span>
+        <span>지역 검색</span>
+      </div>
+      <div id="search-box" style="display: none; margin-top: 10px;">
+        <input type="text" id="address-input" placeholder="주소 입력" style="width: 100%; padding: 5px;" />
+        <button onclick="searchAddress()" style="margin-top: 5px; width: 100%;">검색</button>
+      </div>
+      <div class="nav-item">
+        <span class="material-icons">filter_alt</span>
+        <span>부지 필터링</span>
+      </div>
+      <div class="nav-item">
+        <span class="material-icons">assessment</span>
+        <span>프로젝트 검토 및 보고서 생성</span>
+      </div>
+      <div class="nav-item">
+        <span class="material-icons">table_chart</span>
+        <span>프로젝트 DB 조회/편집</span>
+      </div>
+    </div>
+    <div class="nav-item">
+      <span class="material-icons">person</span>
+      <span>로그인</span>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script>
+    const VWORLD_API_KEY = "{{ vworld_key }}";
+    console.log("📦 VWORLD_API_KEY:", VWORLD_API_KEY);
+  </script>
+  <script src="{% static 'main/script.js' %}"></script>
+</body>
+</html>

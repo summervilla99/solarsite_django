@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.pyc
+
+# Django
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+
+# 환경설정
+.env
+.env.*
+
+# VS Code / JetBrains IDEs
+.vscode/
+.idea/
+
+# OS/에디터 관련
+.DS_Store
+Thumbs.db
+
+# Static/Media (선택)
+staticfiles/
+media/
+
+# Pipenv or Poetry
+Pipfile.lock
+poetry.lock
+
+# migrations (선택적 제외)
+*/migrations/__pycache__/
+*/migrations/*.py[cod]
+# 만약 초기 마이그레이션까지 버전에 포함하고 싶지 않다면:
+# */migrations/*.py
+
+# Node.js (만약 JS build 도구 쓰는 경우)
+node_modules/
+dist/
+build/
