@@ -4,6 +4,8 @@ __pycache__/
 *.sqlite3
 *.pyc
 
+data/
+
 # Django
 db.sqlite3
 *.log
@@ -23,10 +25,6 @@ db.sqlite3
 # OS/에디터 관련
 .DS_Store
 Thumbs.db
-
-# Static/Media (선택)
-staticfiles/
-media/
 
 # Pipenv or Poetry
 Pipfile.lock
