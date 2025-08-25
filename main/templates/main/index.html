@@ -12,18 +12,36 @@
 <body>
   <div class="sidebar">
     <div class="nav-top">
-      <div class="nav-item" onclick="toggleSearchBox()">
+      <div class="nav-item" id="btn-search">
         <span class="material-icons">search</span>
         <span>지역 검색</span>
       </div>
       <div id="search-box" style="display: none; margin-top: 10px;">
         <input type="text" id="address-input" placeholder="주소 입력" style="width: 100%; padding: 5px;" />
-        <button onclick="searchAddress()" style="margin-top: 5px; width: 100%;">검색</button>
+        <button id="btn-address-search" style="margin-top: 5px; width: 100%;">검색</button>
       </div>
-      <div class="nav-item">
+    
+      <div class="nav-item" id="btn-filter">
         <span class="material-icons">filter_alt</span>
         <span>부지 필터링</span>
       </div>
+
+      <div id="filter-box">
+        <h4>지목</h4>
+        <label><input type="checkbox" class="jibun-check" value="전"> 전</label><br>
+        <label><input type="checkbox" class="jibun-check" value="답"> 답</label><br>
+        <label><input type="checkbox" class="jibun-check" value="과"> 과</label><br>
+        <label><input type="checkbox" class="jibun-check" value="염전"> 염전</label><br>
+        <label><input type="checkbox" class="jibun-check" value="임야"> 임야</label><br>
+        <label><input type="checkbox" class="jibun-check" value="양어장"> 양어장</label><br>
+
+        <div style="margin-top:12px;">
+          <label for="land-opacity">투명도</label>
+          <input type="range" id="land-opacity" min="0" max="100" value="40">
+          <span id="opacity-value">40%</span>
+        </div>
+      </div>
+      
       <div class="nav-item">
         <span class="material-icons">assessment</span>
         <span>프로젝트 검토 및 보고서 생성</span>
