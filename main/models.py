@@ -14,3 +14,13 @@ class LandCategory(models.Model):
     class Meta:
         db_table = 'filter"."land_category'
         managed = False
+
+class Jimok(models.Model):
+    gid = models.IntegerField(primary_key=True)
+    jibun = models.CharField(max_length=255, blank=True, null=True)
+    jimok = models.CharField(max_length=10, blank=True, null=True)  # ✅ 파생 필드
+    geom = models.MultiPolygonField(srid=3857)
+
+    class Meta:
+        db_table = 'filter"."v_jimok'
+        managed = False

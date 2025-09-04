@@ -5,10 +5,17 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.measure import D
 from django.contrib.gis.geos import Polygon
-from .models import LandCategory
-from django.db import connection
-import requests, json, re
+from .models import LandCategory, Jimok
+from vectortiles.views import MVTView
+from .vector_layers import JimokVectorLayer
+import requests, json
 
+class JimokTileView(MVTView):
+    # model = Jimok
+    # vector_tile_layer_name = "jimok"
+    # vector_tile_fields = ("gid", "jibun", "jimok")  # 내려줄 속성 필드
+    # geometry_field = "geom"
+    layer_classes = [JimokVectorLayer]
 
 def index(request):
     return render(request, 'main/index.html', {
@@ -58,34 +65,45 @@ def extract_jimok(jibun: str):
 
     return ""
 
+from django.contrib.gis.geos import Polygon
+
 def filter_land(request):
     try:
-        # 요청 파라미터 받기
-        lat = float(request.GET.get("lat"))
-        lng = float(request.GET.get("lng"))
-        radius = float(request.GET.get("radius", 2000))
-
         disallowed = request.GET.get("disallowed", "")
         disallowed_list = [x.strip() for x in disallowed.split(",") if x]
 
-        # 검색 좌표 (WGS84 → 5186 변환)
-        point = Point(lng, lat, srid=4326)
-        point.transform(5186)
-
-        qs = LandCategory.objects.filter(
-            geom__distance_lte=(point, D(m=radius))
-        )
-
+        bbox = request.GET.get("bbox")
         features = []
+
+        if bbox:
+            # bbox 파라미터 처리
+            minx, miny, maxx, maxy = map(float, bbox.split(","))
+            bbox_poly = Polygon.from_bbox((minx, miny, maxx, maxy))
+            bbox_poly.srid = 4326  # Leaflet 좌표계
+            bbox_poly.transform(5186)  # DB 좌표계 맞추기
+
+            qs = LandCategory.objects.filter(geom__intersects=bbox_poly)
+        else:
+            # 기존 반경 방식 fallback (호환성 유지)
+            lat = float(request.GET.get("lat"))
+            lng = float(request.GET.get("lng"))
+            radius = float(request.GET.get("radius", 2000))
+
+            point = Point(lng, lat, srid=4326)
+            point.transform(5186)
+            qs = LandCategory.objects.filter(
+                geom__distance_lte=(point, D(m=radius))
+            )
+
         for obj in qs:
             jibun = obj.jibun or ""
             jimok = extract_jimok(jibun)
 
             if jimok in disallowed_list:
                 geom_4326 = obj.geom.transform(4326, clone=True)
-                # geometry = json.loads(geom_4326.geojson)
-                geometry = json.loads(geom_4326.simplify(5, preserve_topology=True).geojson)
-
+                geometry = json.loads(
+                    geom_4326.simplify(5, preserve_topology=True).geojson
+                )
                 features.append({
                     "type": "Feature",
                     "geometry": geometry,
@@ -102,7 +120,6 @@ def filter_land(request):
             "type": "FeatureCollection",
             "features": features
         })
-
     except Exception as e:
         print("[API ERROR]", e)
         return JsonResponse({"error": str(e)}, status=500)
